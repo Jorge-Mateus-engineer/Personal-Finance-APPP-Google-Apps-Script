@@ -88,9 +88,10 @@ function mainLineChart() {
       }
     })
     //4.4 Push the generated totals and date into the maun array
-    dataArray.push([date, acumulatedIncome, acumulatedExpenses]);
+    dataArray.push([formatDate(date), acumulatedIncome, acumulatedExpenses]);
   })
 
+  Logger.log(dataArray)
   return dataArray;
 
 }
