@@ -1,0 +1,22 @@
+<script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawPieChart() {
+    /*Since the server side script is runed in an async way, I use the
+    withSuccessHandler() method to only render the chart once the data
+    is loaded from the server side
+    */
+    google.script.run.withSuccessHandler(function(totalsArray) {
+    /*Get array of totals adn turn it into a datatable using the Google Visualization API
+    https://developers.google.com/chart/interactive/docs/reference#arraytodatatable */
+    const data = google.visualization.arrayToDataTable(totalsArray);
+    /*Set options for the chart 
+    Full list: https://developers.google.com/chart/interactive/docs/gallery/piechart#configuration-options */
+    const options = { title: 'My Daily Activities', is3D: true };
+    //create chart object
+    const chart = new google.visualization.PieChart(document.getElementById('piechart'));
+    chart.draw(data, options);
+    }).mainPieChartData();
+  }
+</script>
