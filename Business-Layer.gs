@@ -1,26 +1,20 @@
 //Global variables
-const spreadsheetURL = "https://docs.google.com/spreadsheets/d/1-56ouwj1LK-l6ByaoEpQgh2TwpIW66tt57KKPP7ld9w/edit" //String that contains URL
-const spreadsheet = SpreadsheetApp.openByUrl(spreadsheetURL); //Get a Spreadsheet Object type using the URL
+initializeGlobals();
+
+
 //Dates for filtering
 let todayDate = new Date()
 let startDate = new Date(todayDate.getFullYear(), todayDate.getMonth(), 1);
 let endDate = todayDate
 
-//Put relevant sheets into variables and get the values as 2D array and use the slice method to remove the first row
-const expensesTable = spreadsheet.getSheetByName("Expenses Table").getDataRange().getValues().slice(1);
-const incomeTable = spreadsheet.getSheetByName("Income Table").getDataRange().getValues().slice(1);
-const categoriesTable = spreadsheet.getSheetByName("Categories").getDataRange().getValues().slice(1);
 
 //Filter data by dates
-const filteredExpenses = expensesTable; //WIP
-const filteredIncome = incomeTable; //WIP
-
-
+const filteredExpenses = getExpenseByDate(startDate, endDate); //WIP
+const filteredIncome = getIncomeByDate(startDate, endDate); //WIP
 
 function mainPieChartData() {
   //1.Resolve Category IDs
   const data = replaceCategoryIDs(categoriesTable, filteredExpenses);
-  
   //2. Main Category List
   const mainCategories = getMainCategoryList(categoriesTable);
 
@@ -31,7 +25,7 @@ function mainPieChartData() {
     totalsMap[category] = 0;
   })
 
-  //3.2 Acumulat the totals in the map 
+  //3.2 Acumulate the totals in the map 
   data.slice(1).forEach((row)=> {
     totalsMap[row[3]] += row[1]
   })
@@ -40,11 +34,11 @@ function mainPieChartData() {
   //3.3.1 When the totals are added up, a value of "="undefined"" appears, so I had to remove it
   const totalsArray = Object.keys(totalsMap).map(category => [category, totalsMap[category]]).filter(row => row[1] != "undefined");
   totalsArray.unshift(["Category", "Total"])
-  
+
   return totalsArray
 }
 
-function mainLineChart() {
+function mainLineChartData() {
   //1. Get dates array
   //1.1 Get the number of days betwend the dates
   const amountOfDays = Math.round((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
@@ -91,7 +85,37 @@ function mainLineChart() {
     dataArray.push([formatDate(date), acumulatedIncome, acumulatedExpenses]);
   })
 
-  Logger.log(dataArray)
   return dataArray;
+}
+
+
+function mainTreemapData() {
+  //1.Resolve Category IDs
+  const data = replaceCategoryIDs(categoriesTable, filteredExpenses);
+
+  //2.Get sub Categories List
+  const subCategoriesList = getSubCategoryList(categoriesTable);
+
+  //3. Get totals by sub category
+  //3.1 Make a map with totals set to 0
+  const totalsMap = {};
+  subCategoriesList.forEach(subCategory => {
+    totalsMap[subCategory] = 0;
+  })
+  //3.2 Acumulate the totals in the map 
+  data.slice(1).forEach((row)=> {
+    totalsMap[row[4]] += row[1]
+  })
+  //3.3 Remove empty totals
+  Object.entries(totalsMap).forEach(entry => {
+    if(entry[1] == 0) {
+      delete totalsMap[entry[0]]
+    }
+  })
+
+  //4. Create array for treemap
+  //4.1 Initialize array with headers:
+  const dataArray = [["Sub-Category", "Category", "Amount"]]
+
 
 }
