@@ -23,36 +23,6 @@ function replaceCategoryIDs(categoriesTable, tableToResolve) {
   return result;
 }
 
-function getMainCategoryList(categoriesTable) {
-  const mainCategories = []
-
-  categoriesTable.forEach((row) => {
-    if(row[3] == "Main"){
-      mainCategories.push(row[1])
-    }
-  })
-
-  return mainCategories;
-}
-
-function getSubCategoryList(categoriesTable) {
-  const subCategories = []
-
-  categoriesTable.forEach((row) => {
-    if(row[3] != "Main"){
-      subCategories.push(row[1])
-    }
-  })
-
-  return subCategories;
-}
-
-function filterByDates(tableToFilter, startDate, endDate) {
-  return tableToFilter.filter((row)=>{
-    return row[1] >= startDate && row[1] <= endDate;
-  })
-}
-
 function formatDate(date) {
   return Utilities.formatDate(date, Session.getScriptTimeZone(), 'yyyy-MM-dd');
 }

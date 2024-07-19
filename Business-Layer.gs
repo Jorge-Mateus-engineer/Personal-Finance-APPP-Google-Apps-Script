@@ -1,7 +1,6 @@
 //Global variables
 initializeGlobals();
 
-
 //Dates for filtering
 let todayDate = new Date()
 let startDate = new Date(todayDate.getFullYear(), todayDate.getMonth(), 1);
@@ -9,14 +8,14 @@ let endDate = todayDate
 
 
 //Filter data by dates
-const filteredExpenses = getExpenseByDate(startDate, endDate); //WIP
-const filteredIncome = getIncomeByDate(startDate, endDate); //WIP
+const filteredExpenses = getExpenseByDate(startDate, endDate);
+const filteredIncome = getIncomeByDate(startDate, endDate); 
 
 function mainPieChartData() {
   //1.Resolve Category IDs
   const data = replaceCategoryIDs(categoriesTable, filteredExpenses);
   //2. Main Category List
-  const mainCategories = getMainCategoryList(categoriesTable);
+  const mainCategories = getMainCategoriesList();
 
   //3. Generate data for pie chart
   //3.1 Make a map with totals set to 0
@@ -90,32 +89,43 @@ function mainLineChartData() {
 
 
 function mainTreemapData() {
-  //1.Resolve Category IDs
-  const data = replaceCategoryIDs(categoriesTable, filteredExpenses);
+  //1.Resolve Category IDs and call Categories table
+  const expensesData = replaceCategoryIDs(categoriesTable, filteredExpenses);
+  const categoryData = getAllCategories();
 
-  //2.Get sub Categories List
-  const subCategoriesList = getSubCategoryList(categoriesTable);
+  //2. Get array for categories hierarchy [Sub]
+  //2.1 Initialize with headers
+  const dataArray = [["Sub-Category", "Category", "Expenses"],
+                    ["Categories", null, 0]]
 
-  //3. Get totals by sub category
-  //3.1 Make a map with totals set to 0
-  const totalsMap = {};
-  subCategoriesList.forEach(subCategory => {
-    totalsMap[subCategory] = 0;
-  })
-  //3.2 Acumulate the totals in the map 
-  data.slice(1).forEach((row)=> {
-    totalsMap[row[4]] += row[1]
-  })
-  //3.3 Remove empty totals
-  Object.entries(totalsMap).forEach(entry => {
-    if(entry[1] == 0) {
-      delete totalsMap[entry[0]]
+  //2.2 Populate array with categories and all values set to 0
+  categoryData.forEach(row => {
+    if(row[3] === "Main"){
+      dataArray.push([row[1], "Categories",0])
+    } else {
+      dataArray.push([row[1], getMainCategory(row[1]), 0])
+    }
+  });
+  
+  //3.Acumulate by sub categories
+  dataArray.forEach(row =>{
+    if(row[1] !== "Categories"){
+      expensesData.filter(expenseRow => {
+        return expenseRow[4] === row[0]
+      }).forEach(filteredExpense => {
+        row[2] += filteredExpense[1]
+      })
     }
   })
 
-  //4. Create array for treemap
-  //4.1 Initialize array with headers:
-  const dataArray = [["Sub-Category", "Category", "Amount"]]
-
-
+  //4. Return array without empty nodes
+  return dataArray.filter((row, y) => {
+    if( y === 0 || y === 1) {
+      return true
+    } else if(row[1] === "Categories") {
+      return true
+    } else {
+      return row[2] === 0 ? false : true
+    }
+  })
 }

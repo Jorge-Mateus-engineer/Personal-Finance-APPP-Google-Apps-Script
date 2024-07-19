@@ -1,29 +1,30 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
-  google.charts.load('current', {'packages':['corechart', 'line']});
+  google.charts.load('current', {'packages':['corechart', 'line', 'treemap']});
   google.charts.setOnLoadCallback(drawCharts);
 
 
   function drawCharts() {
-    //Draw pie Chart
     /*Since the server side script is runed in an async way, I use the
     withSuccessHandler() method to only render the chart once the data
     is loaded from the server side
     */
+
+    //Draw pie Chart
     google.script.run.withSuccessHandler(function(totalsArray) {
-    /*Get array of totals adn turn it into a datatable using the Google Visualization API
-    https://developers.google.com/chart/interactive/docs/reference#arraytodatatable */
-    const data = google.visualization.arrayToDataTable(totalsArray);
-    /*Set options for the chart 
-    Full list: https://developers.google.com/chart/interactive/docs/gallery/piechart#configuration-options */
-    const options = { title: 'My Daily Activities'};
-    //create chart object
-    const chart = new google.visualization.PieChart(document.getElementById('piechart'));
-    chart.draw(data, options);
+      /*Get array of totals adn turn it into a datatable using the Google Visualization API
+      https://developers.google.com/chart/interactive/docs/reference#arraytodatatable */
+      const data = google.visualization.arrayToDataTable(totalsArray);
+      /*Set options for the chart 
+      Full list: https://developers.google.com/chart/interactive/docs/gallery/piechart#configuration-options */
+      const options = { title: 'My Daily Activities'};
+      //create chart object
+      const chart = new google.visualization.PieChart(document.getElementById('piechart'));
+      chart.draw(data, options);
     }).mainPieChartData();
 
     //Draw Line Chart
-      google.script.run.withSuccessHandler(function(dataArray){
+    google.script.run.withSuccessHandler(function(dataArray){
       const data = google.visualization.arrayToDataTable(dataArray);
       const options = {
         title: 'Company Performance',
@@ -33,6 +34,22 @@
       const chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
       chart.draw(data, options);
     }).mainLineChartData();
+
+    //Draw Treemap
+    google.script.run.withSuccessHandler(function(dataArray){
+      const data = google.visualization.arrayToDataTable(dataArray);
+      const tree = new google.visualization.TreeMap(document.getElementById('chart_div'));
+
+      tree.draw(data, {
+        minColor: '#f00',
+        midColor: '#ddd',
+        maxColor: '#0d0',
+        headerHeight: 15,
+        fontColor: 'black',
+        showScale: true
+      });
+
+    }).mainTreemapData()
 
   }
 </script>
