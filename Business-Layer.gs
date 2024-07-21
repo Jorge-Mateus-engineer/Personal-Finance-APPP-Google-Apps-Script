@@ -2,14 +2,18 @@
 initializeGlobals();
 
 //Dates for filtering
-let todayDate = new Date()
+let todayDate = new Date();
 let startDate = new Date(todayDate.getFullYear(), todayDate.getMonth(), 1);
-let endDate = todayDate
+let endDate = todayDate;
+
+//Totals
+let totalExpenses = 0;
+let totalIncome = 0;
 
 
 //Filter data by dates
 const filteredExpenses = getExpenseByDate(startDate, endDate);
-const filteredIncome = getIncomeByDate(startDate, endDate); 
+const filteredIncome = getIncomeByDate(startDate, endDate);
 
 function mainPieChartData() {
   //1.Resolve Category IDs
@@ -81,7 +85,7 @@ function mainLineChartData() {
       }
     })
     //4.4 Push the generated totals and date into the maun array
-    dataArray.push([formatDate(date), acumulatedIncome, acumulatedExpenses]);
+    dataArray.push([formatDate(date).substring(5), acumulatedIncome, acumulatedExpenses]);
   })
 
   return dataArray;
@@ -128,4 +132,25 @@ function mainTreemapData() {
       return row[2] === 0 ? false : true
     }
   })
+}
+
+function getTotalIncome() {
+  filteredIncome.forEach(row => {
+    totalIncome += row[1]
+  });
+
+  return totalIncome;
+}
+
+function getTotalExpense() {
+  filteredExpenses.forEach(row => {
+    totalExpenses += row[2];
+  })
+  return totalExpenses;
+}
+
+function getBalance() {
+
+  const balance = getTotalIncome() - getTotalExpense();
+  return balance.toFixed(2);
 }

@@ -1,3 +1,97 @@
 <style>
 
+/* Global resets */
+ * {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+ }  
+
+ html {
+    font-size: 62.5%;
+    overflow: hidden;
+ }
+
+ #html, #body {
+   height: 100vh;
+   width: 100vw;
+ }
+
+ #body {
+  padding: 2rem;
+  background-color: #f8fcff;
+ }
+
+ main {
+   display: grid;
+   grid-template-rows: 1fr 2fr;
+   grid-template-columns: 1fr;
+   height: 100%;
+   width: 100%;
+ }
+
+/* Section of the pie chart, line chart and totall */
+
+ .main {
+    display: flex;
+    gap: 1rem;
+ }
+
+ #piechart, #curve_chart, #totals {
+  border-radius: 15px;
+   border: 2px solid black;
+   overflow: hidden;
+ }
+
+ #piechart {
+   width: 25%;
+   height: 100%;
+   backgroun-color: #e7f5ff;
+ }
+
+ #curve_chart {
+   width: 60%;
+   height: 100%;
+ }
+
+ #totals {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
+  width: 15%;
+  height: 100%;
+ }
+
+ .income-detail {
+  background-image: linear-gradient(to top left, #39b385, #9be15d);
+ }
+
+ .expense-detail {
+  background-image: linear-gradient(to top left, #e52a5a, #ff585f);
+ }
+
+ .balance-detail {
+    background-image: linear-gradient(to top left, #ffb003, #ffcb03);
+ }
+
+ .total-detail {
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+ }
+
+ .total-detail div {
+  font-size: 2.5rem;
+  color: white;
+ }
+
+ /* Section of the treemap and budgets */
+
+ #treemap {
+  height: 100%;
+  padding: 5rem;
+ }
+
+
 </style>

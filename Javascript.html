@@ -17,7 +17,26 @@
       const data = google.visualization.arrayToDataTable(totalsArray);
       /*Set options for the chart 
       Full list: https://developers.google.com/chart/interactive/docs/gallery/piechart#configuration-options */
-      const options = { title: 'My Daily Activities'};
+      const options = {
+        title: 'Expenses per Category',
+        titleTextStyle: {fontSize: 20},
+        chartArea: {
+          left:'5%',
+          top:'15%',
+          width:'100%',
+          height:'80%',
+        },
+        legend: {
+          position: 'left',
+          textStyle: {
+            fontSize: 15,
+          }
+        },
+        pieSliceTextStyle: {
+          fontSize: 15,
+        },
+        backgroundColor: '#e7f5ff'
+      };
       //create chart object
       const chart = new google.visualization.PieChart(document.getElementById('piechart'));
       chart.draw(data, options);
@@ -26,10 +45,28 @@
     //Draw Line Chart
     google.script.run.withSuccessHandler(function(dataArray){
       const data = google.visualization.arrayToDataTable(dataArray);
+
       const options = {
-        title: 'Company Performance',
+        title: 'Expenses (red) vs Income (blue)',
         curveType: 'none',
-        legend: { position: 'bottom' }
+        legend: { position: 'none' },
+        hAxis: {
+          format: 'MMM d',
+          gridlines: {
+            color: "#c92a2a",
+            count: 10 // Interval for major gridlines
+          },
+          minorGridlines: {
+            color: "red",
+            interval: 2,
+          }
+        },
+        chartArea: {
+          width:'85%',
+          height:'70%',
+        },
+        // backgroundColor: '#f3f0ff'
+
       };
       const chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
       chart.draw(data, options);
@@ -38,7 +75,7 @@
     //Draw Treemap
     google.script.run.withSuccessHandler(function(dataArray){
       const data = google.visualization.arrayToDataTable(dataArray);
-      const tree = new google.visualization.TreeMap(document.getElementById('chart_div'));
+      const tree = new google.visualization.TreeMap(document.getElementById('treemap'));
 
       tree.draw(data, {
         minColor: '#f00',
@@ -50,6 +87,48 @@
       });
 
     }).mainTreemapData()
-
   }
+</script>
+
+<script type="text/javascript">
+
+function insertTotals() {
+  const incomeTotal = document.getElementById("income-total");
+  const expeseTotal = document.getElementById("expense-total");
+  const balanceTotal = document.getElementById("balance-total");
+
+  google.script.run.withSuccessHandler(function(income) {
+    const formattedAmount = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(income);
+
+    incomeTotal.innerHTML = formattedAmount;
+
+  }).getTotalIncome();
+
+  google.script.run.withSuccessHandler(function(expense) {
+    const formattedAmount = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(expense);
+
+    expeseTotal.innerHTML = formattedAmount;
+
+  }).getTotalExpense();
+
+    google.script.run.withSuccessHandler(function(balance) {
+    const formattedAmount = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(balance);
+
+    balanceTotal.innerHTML = formattedAmount;
+
+  }).getBalance();
+
+}
+
+insertTotals();
+
 </script>

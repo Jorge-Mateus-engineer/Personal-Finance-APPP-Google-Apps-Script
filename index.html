@@ -1,15 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html id="html">
   <head>
     <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <?!= include("CSS.html") ?>
     <title>Personal finance 💰</title>
   </head>
-  <body>
-    <h1>Hello world</h1>
-    <div id="piechart" style="width: 900px; height: 500px;"></div>
-     <div id="curve_chart" style="width: 900px; height: 500px"></div>
-     <div id="chart_div" style="width: 900px; height: 500px;"></div>
+  <body id="body">
+    <main>
+      <section class="main">
+        <div id="piechart"></div>
+        <div id="curve_chart"></div>
+        <div id="totals">
+          <div class="total-detail income-detail">
+            <div id="income-word">Income</div>
+            <div id="income-total">$ 0.00</div>
+          </div>
+          <div class="total-detail expense-detail">
+            <div id="expense-word">Expenses</div>
+            <div id="expense-total">$ 0.00</div>
+          </div>
+          <div class="total-detail balance-detail">
+            <div id="balance-word">Balance</div>
+            <div id="balance-total">$ 0.00</div>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div id="treemap" style="width: 900px;"></div>
+      </section>
+    </main>
     <?!= include("Javascript.html")?>
   </body>
 </html>
